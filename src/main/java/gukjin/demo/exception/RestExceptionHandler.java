@@ -12,7 +12,7 @@ import java.util.Map;
 public class RestExceptionHandler {
 
     @ExceptionHandler(MemberDuplicateException.class)
-    public ResponseEntity errorServiceExceptionHandler(Exception e) {
+    public ResponseEntity<Map> errorServiceExceptionHandler(Exception e) {
         Map<String, String> body = new HashMap<>();
         body.put("Error", "유저 아이디 명 중복");
         return new ResponseEntity(body, HttpStatus.BAD_REQUEST);
