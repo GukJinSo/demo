@@ -4,9 +4,9 @@ import lombok.*;
 
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(builderMethodName = "builder")
+@Builder(builderMethodName = "innerBuilder", builderClassName = "Builder")
 public class UserLombok {
 
     private Long id;
@@ -15,5 +15,9 @@ public class UserLombok {
     private String password;
     private int age;
     private String gender;
+
+    public static Builder builder(Long id){
+        return innerBuilder().id(id);
+    }
 
 }

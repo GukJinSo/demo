@@ -1,6 +1,7 @@
 package gukjin.demo.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class User {
@@ -12,7 +13,7 @@ public class User {
     private int age;
     private String gender;
 
-    public User(Builder builder){
+    private User(Builder builder){
         this.id = builder.id;
         this.name = builder.name;
         this.address = builder.address;
@@ -21,8 +22,8 @@ public class User {
         this.gender = builder.gender;
     }
 
-    public static Builder builder(){
-        return new Builder();
+    public static Builder builder(Long id){
+        return new Builder(id);
     }
 
     public static class Builder{
@@ -34,7 +35,9 @@ public class User {
         private int age;
         private String gender;
 
-        protected Builder(){}
+        protected Builder(Long id){
+            this.id = id;
+        }
 
         public Builder id(Long id){
             this.id = id;

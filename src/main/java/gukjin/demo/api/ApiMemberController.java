@@ -81,14 +81,13 @@ public class ApiMemberController {
      */
     @GetMapping("/api/builder")
     public ResponseEntity<List> httpResponseBuildPattern(){
-        User user = User.builder()
-                .id(1L)
+        User user = User.builder(1L)
                 .address("율하동")
                 .age(20)
                 .name("GJ S")
-                .password("askdlaskdl")
+                .password("askdlaskdEncoded")
                 .gender("MALE").build();
-        UserLombok userLombok = UserLombok.builder().id(2L).age(35).name("GJ K").build();
+        UserLombok userLombok = UserLombok.builder(2L).age(35).name("GJ K").build();
         return ResponseEntity.ok().body(Arrays.asList(user, userLombok));
     }
 
