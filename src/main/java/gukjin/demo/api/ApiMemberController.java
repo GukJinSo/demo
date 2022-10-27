@@ -5,12 +5,14 @@ import gukjin.demo.dto.UserLombok;
 import gukjin.demo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Array;
+import java.lang.reflect.Member;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,6 +82,7 @@ public class ApiMemberController {
      * Builder 패턴 직접 구현, lombok 이용 구현
      */
     @GetMapping("/api/builder")
+    @CrossOrigin(originPatterns = "*")
     public ResponseEntity<List> httpResponseBuildPattern(){
         User user = User.builder(1L)
                 .address("율하동")
@@ -89,6 +92,37 @@ public class ApiMemberController {
                 .gender("MALE").build();
         UserLombok userLombok = UserLombok.builder(2L).age(35).name("GJ K").build();
         return ResponseEntity.ok().body(Arrays.asList(user, userLombok));
+    }
+
+    /**
+     *
+     */
+    @GetMapping("/api/cookie")
+    @CrossOrigin(origins = "https://nimble-tanuki-64e891.netlify.app/", allowCredentials = "true")
+    public ResponseEntity<UserLombok> cookie(HttpServletResponse response, HttpSession session, HttpServletRequest request){
+
+        UserLombok userLombok = UserLombok.builder(2L).age(35).name("GJ K").build();
+
+            ResponseCookie responseCookie = ResponseCookie.from("name", "gukjin")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .maxAge(20)
+                    .build();
+            response.addHeader("Set-Cookie", responseCookie.toString());
+
+        System.out.println("/api/cookie  session Id = "+session.getId());
+
+        return ResponseEntity.ok().body(userLombok);
+    }
+
+    @GetMapping("/api/session")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    public String sessionCheck(HttpSession session){
+        System.out.println("/api/session  session Id = "+session.getId());
+
+
+        return "OK";
     }
 
 
