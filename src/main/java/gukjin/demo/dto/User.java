@@ -1,5 +1,6 @@
 package gukjin.demo.dto;
 
+import gukjin.demo.entity.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 
