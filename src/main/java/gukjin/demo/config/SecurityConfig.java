@@ -22,11 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsFilter corsFilter;
     private final PrincipalOauth2UserService principalOauth2UserService;
 
-    @Bean
-    public BCryptPasswordEncoder encodePwd(){
-        return new BCryptPasswordEncoder();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -35,14 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/user/**").authenticated()
                 .antMatchers("/manager/**").authenticated()
-                .anyRequest().permitAll();
-        http.formLogin()
+                .anyRequest().permitAll()
+            .and().formLogin()
                 .loginProcessingUrl("/login-process")
-                .passwordParameter("password")
-                .usernameParameter("username")
-                .defaultSuccessUrl("/", false).
-        and()
-                .oauth2Login()
+                .defaultSuccessUrl("/", false)
+
+            .and().oauth2Login()
                 .defaultSuccessUrl("http://localhost:3000/",true)
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService); // 구글 로그인 완료 후 처리

@@ -1,26 +1,37 @@
 package gukjin.demo.entity;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class User {
     @Id @GeneratedValue
     private Long id;
     private String username;
     private String password;
     private String email;
-
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
     private LocalDateTime createDate;
-
     private String provider;
     private String providerId;
+
+    @Builder
+    public User(String username, String password, String email, UserRole role, LocalDateTime createDate, String provider, String providerId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.createDate = createDate;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 
     public Long getId() {
         return id;

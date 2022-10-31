@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,13 +21,14 @@ import org.springframework.web.bind.annotation.*;
 public class SecurityController {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/test/login")
-    public String loginTest(Authentication authentication){
+    public String loginTest(@AuthenticationPrincipal PrincipalDetails principalDetails){
         System.out.println("/test/login=========================");
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("authentication: "+principalDetails);
+        if (principalDetails != null){
+            System.out.println("authentication: "+principalDetails.getUser());
+        }
         return "세션 정보 확인하기";
     }
 
@@ -38,8 +41,7 @@ public class SecurityController {
     public ResponseEntity join(@RequestBody User user){
         System.out.println(user);
         user.setRole(UserRole.ROLE_USER);
-        String rawPassword = user.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        String encPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encPassword);
         userRepository.save(user); // 패스워드 암호화하지 않으면 로그인 불가능
         return ResponseEntity.ok(null);
@@ -55,13 +57,11 @@ public class SecurityController {
     public ResponseEntity joinAdmin(@RequestBody User user){
         System.out.println(user);
         user.setRole(UserRole.ROLE_ADMIN);
-        String rawPassword = user.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        String encPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encPassword);
         userRepository.save(user); // 패스워드 암호화하지 않으면 로그인 불가능
         return ResponseEntity.ok(null);
     }
-
 
 
 
